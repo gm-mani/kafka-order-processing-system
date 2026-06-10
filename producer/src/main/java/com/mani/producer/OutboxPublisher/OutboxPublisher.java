@@ -9,6 +9,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 @Component
 @AllArgsConstructor
@@ -21,8 +24,7 @@ public class OutboxPublisher {
     @Scheduled(fixedDelay = 5000)
     public void publishEvents() {
 
-        List<OutboxEvent> events =
-                outboxRepository.findByPublishedFalse();
+        List<OutboxEvent> events = outboxRepository.findByPublishedFalse();
 
         if (events.isEmpty()) {
             log.debug("No unpublished events found");
@@ -32,20 +34,31 @@ public class OutboxPublisher {
         log.info("Publishing {} unpublished event(s)", events.size());
 
         for (OutboxEvent event : events) {
+            try {
+                kafkaTemplate.send(
+                        "orders-topic",
+                        event.getAggregateId(),
+                        event.getPayload()
+                ).get(5, TimeUnit.SECONDS); // block until broker acks or timeout
 
-            kafkaTemplate.send(
-                    "orders-topic",
-                    event.getAggregateId(),
-                    event.getPayload()
-            );
+                log.debug("Event published to Kafka - Event ID: {}, Order ID: {}",
+                        event.getEventId(), event.getAggregateId());
 
-            log.debug("Event published to Kafka - Event ID: {}, Order ID: {}", event.getEventId(), event.getAggregateId());
+                event.setPublished(true);
+                outboxRepository.save(event);
 
-            event.setPublished(true);
-
-            outboxRepository.save(event);
+            } catch (ExecutionException e) {
+                log.error("Failed to publish event {} to Kafka — will retry on next run: {}",
+                        event.getEventId(), e.getCause().getMessage());
+            } catch (TimeoutException e) {
+                log.error("Timed out waiting for Kafka ack on event {} — will retry on next run",
+                        event.getEventId());
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                log.error("Interrupted while publishing event {}", event.getEventId());
+            }
         }
 
-        log.info("All {} event(s) marked as published", events.size());
+        log.info("Outbox publish run complete");
     }
 }

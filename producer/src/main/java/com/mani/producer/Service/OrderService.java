@@ -1,6 +1,7 @@
 package com.mani.producer.Service;
 
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mani.producer.Entity.Order;
 import com.mani.producer.Entity.OutboxEvent;
 import com.mani.producer.Repository.OrderRepository;
@@ -11,7 +12,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import tools.jackson.databind.ObjectMapper;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -29,7 +29,6 @@ public class OrderService {
     public void createOrder(OrderRequest request) {
 
         Order order = new Order();
-
         order.setOrderId(request.getOrderId());
         order.setProductName(request.getProductName());
         order.setPrice(request.getPrice());
@@ -44,14 +43,17 @@ public class OrderService {
         orderCreatedEvent.setEventId(UUID.randomUUID().toString());
 
         OutboxEvent event = new OutboxEvent();
-
         event.setEventId(UUID.randomUUID().toString());
         event.setAggregateId(order.getOrderId());
         event.setEventType("ORDER_CREATED");
 
-        event.setPayload(
-                objectMapper.writeValueAsString(orderCreatedEvent)
-        );
+        try {
+            event.setPayload(objectMapper.writeValueAsString(orderCreatedEvent));
+        } catch (JsonProcessingException e) {
+            throw new IllegalStateException(
+                    "Failed to serialize OrderCreatedEvent for order: " + order.getOrderId(), e
+            );
+        }
 
         event.setPublished(false);
         event.setCreatedAt(LocalDateTime.now());

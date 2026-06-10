@@ -20,10 +20,6 @@ spring:
       bootstrap-servers: localhost:9092
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      properties:
-        spring.json.trusted.packages: "*"
-        spring.json.value.default.type: com.mani.consumer.model.OrderCreatedEvent
-        spring.json.use.type.headers: false
     listener:
       observation-enabled: true
       ack-mode: manual
