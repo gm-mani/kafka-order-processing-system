@@ -271,30 +271,11 @@ Monitor:
 ```text
 http://localhost:8085
 ```
-
 ---
 
-# 📸 Screenshots
+# 🚀 Kafka Order Processing System
 
-## Topics
-
-![Kafka Topics](docs/images/topics.png)
-
-## Consumer Groups
-
-![Consumer Groups](docs/images/consumer-groups.png)
-
-## Partitions
-
-![Partitions](docs/images/partitions.png)
-
-## Outbox Events
-
-![Outbox Table](docs/images/outbox-table.png)
-
-## Processed Orders
-
-![Processed Orders](docs/images/processed-orders.png)
+![Kafka Order Processing System](docs/images/banner.png)
 
 ---
 
