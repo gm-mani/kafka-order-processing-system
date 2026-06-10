@@ -1,0 +1,53 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: consumer
+  datasource:
+    url: jdbc:postgresql://localhost:5432/kafka_demo
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  sql:
+    init:
+      mode: always
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.value.default.type: com.mani.consumer.model.OrderCreatedEvent
+        spring.json.use.type.headers: false
+    listener:
+      observation-enabled: true
+      ack-mode: manual
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+# Logging configuration: keep root at INFO but enable DEBUG for consumer package
+logging:
+  level:
+    root: INFO
+    com.mani.consumer: DEBUG
+
+#  cloud:
+#    function:
+#      definition: receiveOrder
+#    stream:
+#      bindings:
+#        receiveOrder-in-0:
+#          destination: stream-order-topic
+#          group: order-group
+#      kafka:
+#        binder:
+#          brokers: localhost:9092
+
+

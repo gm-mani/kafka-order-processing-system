@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: producer
+  datasource:
+    url: jdbc:postgresql://localhost:5432/kafka_demo
+    username: postgres
+    password: postgres
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+# Logging configuration: keep root at INFO but enable DEBUG for producer package
+logging:
+  level:
+    root: INFO
+    com.mani.producer: DEBUG
+
+#  cloud:
+#    stream:
+#      kafka:
+#        binder:
+#          brokers: localhost:9092
+#      bindings:
+#        sendOrder-out-0:
+#          destination: stream-order-topic
+#          content-type: application/json

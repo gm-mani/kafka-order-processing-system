@@ -1,0 +1,22 @@
+//package com.mani.consumer.functions;
+//
+//import com.mani.consumer.Order;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+//import org.springframework.context.annotation.Bean;
+//import org.springframework.context.annotation.Configuration;
+//
+//import java.util.function.Consumer;
+//
+//@Configuration
+//public class ReceiveOrderFunction {
+//
+//    private static final Logger logger = LoggerFactory.getLogger(ReceiveOrderFunction.class);
+//
+//    @Bean
+//    public Consumer<String> receiveOrder() {
+//        return payload -> {
+//            System.out.println(payload);
+//        };
+//    }
+//}
