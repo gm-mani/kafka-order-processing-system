@@ -1,4 +1,4 @@
-package com.mani.producer.Entity;
+package com.mani.producer.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

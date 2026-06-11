@@ -1,6 +1,6 @@
-package com.mani.producer.Repository;
+package com.mani.producer.repository;
 
-import com.mani.producer.Entity.OutboxEvent;
+import com.mani.producer.entity.OutboxEvent;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

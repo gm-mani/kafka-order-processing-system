@@ -1,13 +1,13 @@
-package com.mani.producer.Service;
+package com.mani.producer.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mani.producer.Entity.Order;
-import com.mani.producer.Entity.OutboxEvent;
-import com.mani.producer.Repository.OrderRepository;
-import com.mani.producer.Repository.OutboxRepository;
-import com.mani.producer.model.OrderCreatedEvent;
+import com.mani.producer.entity.Order;
+import com.mani.producer.entity.OutboxEvent;
+import com.mani.producer.model.OrderCreatedPayload;
 import com.mani.producer.model.OrderRequest;
+import com.mani.producer.repository.OrderRepository;
+import com.mani.producer.repository.OutboxRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,25 +36,27 @@ public class OrderService {
         orderRepository.save(order);
         log.debug("Order saved to database with ID: {}", order.getOrderId());
 
-        OrderCreatedEvent orderCreatedEvent = new OrderCreatedEvent();
-        orderCreatedEvent.setOrderId(order.getOrderId());
-        orderCreatedEvent.setProductName(request.getProductName());
-        orderCreatedEvent.setPrice(request.getPrice());
-        orderCreatedEvent.setEventId(UUID.randomUUID().toString());
+        OrderCreatedPayload orderCreatedPayload = OrderCreatedPayload.builder()
+                .eventId(UUID.randomUUID().toString())
+                .orderId(order.getOrderId())
+                .productName(request.getProductName())
+                .price(request.getPrice())
+                .build();
+
+        String orderPayload;
+
+        try {
+            orderPayload = objectMapper.writeValueAsString(orderCreatedPayload);
+        } catch (JsonProcessingException e) {
+            log.error("Error serializing OrderCreatedEvent: {}", e.getMessage());
+            return;
+        }
 
         OutboxEvent event = new OutboxEvent();
         event.setEventId(UUID.randomUUID().toString());
         event.setAggregateId(order.getOrderId());
         event.setEventType("ORDER_CREATED");
-
-        try {
-            event.setPayload(objectMapper.writeValueAsString(orderCreatedEvent));
-        } catch (JsonProcessingException e) {
-            throw new IllegalStateException(
-                    "Failed to serialize OrderCreatedEvent for order: " + order.getOrderId(), e
-            );
-        }
-
+        event.setPayload(orderPayload);
         event.setPublished(false);
         event.setCreatedAt(LocalDateTime.now());
 

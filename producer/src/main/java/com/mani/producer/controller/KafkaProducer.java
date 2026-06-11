@@ -1,7 +1,7 @@
-package com.mani.producer.Controller;
+package com.mani.producer.controller;
 
 
-import com.mani.producer.Service.OrderService;
+import com.mani.producer.service.OrderService;
 import com.mani.producer.model.OrderRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

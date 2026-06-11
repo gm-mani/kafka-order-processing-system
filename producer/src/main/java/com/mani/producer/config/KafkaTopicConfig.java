@@ -1,4 +1,4 @@
-package com.mani.producer.Controller;
+package com.mani.producer.config;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;

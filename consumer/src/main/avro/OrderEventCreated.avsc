@@ -1,0 +1,11 @@
+{
+  "type": "record",
+  "name": "OrderCreatedEvent",
+  "namespace": "com.mani.kafka.avro",
+  "fields": [
+    { "name": "eventId",     "type": "string" },
+    { "name": "orderId",     "type": "string" },
+    { "name": "productName", "type": "string" },
+    { "name": "price",       "type": "string" }
+  ]
+}
