@@ -1,8 +1,8 @@
 # 🚀 Kafka Order Processing System
 
-A Spring Boot project demonstrating real-world Kafka messaging patterns including **Consumer Groups, Partitions, Rebalancing, Manual Acknowledgment, Retry Topics, Dead Letter Topics (DLT), Idempotent Consumers, and the Outbox Pattern**.
+![Kafka Order Processing System](docs/images/banner.png)
 
-Built to deeply understand Apache Kafka through implementation rather than theory.
+A Spring Boot project demonstrating real-world Kafka messaging patterns including Consumer Groups, Partitions, Rebalancing, Manual Acknowledgment, Retry Topics, Dead Letter Topics (DLT), Idempotent Consumers, Outbox Pattern, Avro Serialization, and Schema Registry integration.
 
 ---
 
@@ -86,6 +86,9 @@ This project goes beyond the basics and demonstrates how real-world systems hand
 | Outbox Pattern          | ✅           |
 | Dockerized Setup        | ✅           |
 | Kafka UI                | ✅           |
+| Avro Serialization          | ✅ |
+| Schema Registry             | ✅ |
+| Schema-Based Event Contracts| ✅ |
 
 ---
 
@@ -240,6 +243,28 @@ This avoids data inconsistency between PostgreSQL and Kafka.
 
 ---
 
+# 📄 Avro & Schema Registry
+
+This project uses Apache Avro with Confluent Schema Registry for strongly typed event contracts.
+
+Benefits:
+
+- Smaller binary payloads compared to JSON
+- Producer and consumer schema validation
+- Schema evolution support
+- Type-safe Kafka communication
+
+Flow:
+
+Producer
+→ KafkaAvroSerializer
+→ Schema Registry
+→ Kafka
+→ KafkaAvroDeserializer
+→ Consumer
+
+---
+
 # 🐳 Infrastructure
 
 ```text
@@ -290,6 +315,8 @@ http://localhost:8085
 * ZooKeeper
 * Kafka UI
 * Maven
+* Apache Avro
+* Confluent Schema Registry
 
 ---
 
@@ -312,9 +339,6 @@ Through this project I gained hands-on experience with:
 
 # 🚀 Future Enhancements
 
-* Avro Serialization
-* Schema Registry
-* Kafka Streams
 * KRaft Mode
 * Multi-Broker Cluster
 * Prometheus & Grafana Monitoring
