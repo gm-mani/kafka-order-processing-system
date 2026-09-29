@@ -33,3 +33,9 @@ logging:
 #        sendOrder-out-0:
 #          destination: stream-order-topic
 #          content-type: application/json
+
+outbox:
+  cleanup:
+    cron: "0 0 2 * * *" # Cleanup every day at 2 AM
+    retention-days: 7 # Retain outbox messages for 7 days
+    batch-size: 100 # Number of messages to delete in one batch
