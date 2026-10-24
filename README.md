@@ -181,19 +181,11 @@ Messages are published using:
 key = orderId
 ```
 
-Kafka guarantees ordering within a partition.
+Kafka guarantees ordering **within a partition**. Because every event for an order shares the same key, they all land in the same partition and are consumed in the order they were published.
 
-This ensures:
+**Currently implemented event type:** `ORDER_CREATED` only. The design is built so that future events for the same order (for example `ORDER_UPDATED` or `ORDER_SHIPPED`) would use the same key and keep their relative order.
 
-```text
-Order Created
-Order Updated
-Order Shipped
-```
-
-always arrive in the correct sequence for the same order.
-
----
+**Known ordering caveat:** a message that fails and moves to a retry topic can be overtaken by later messages for the same key. This is an accepted trade-off of non-blocking retries.
 
 # 🛡 Idempotent Consumer
 
