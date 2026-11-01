@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: build and test (${{ matrix.module }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        module: [ producer, consumer ]
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: kafka_demo
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    defaults:
+      run:
+        working-directory: ${{ matrix.module }}
+
+    steps:
+      - name: Download the code
+        uses: actions/checkout@v4
+
+      - name: Install Java 21 and cache Maven downloads
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Start Kafka
+        run: |
+          docker run -d --name kafka -p 9092:9092 apache/kafka:3.8.0
+          for i in $(seq 1 30); do
+            docker exec kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list >/dev/null 2>&1 && break
+            sleep 2
+          done
+
+      - name: Build and test
+        run: mvn -B -ntp verify
+
+      - name: Keep test reports if something failed
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports-${{ matrix.module }}
+          path: ${{ matrix.module }}/target/surefire-reports
