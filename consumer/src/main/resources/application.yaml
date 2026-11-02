@@ -51,4 +51,13 @@ logging:
 #        binder:
 #          brokers: localhost:9092
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+
+  metrics:
+    tags:
+      application: consumer
 
