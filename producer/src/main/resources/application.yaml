@@ -9,6 +9,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+      dialect: org.hibernate.dialect.PostgreSQLDialect
 
   kafka:
     producer:
@@ -39,3 +40,14 @@ outbox:
     cron: "0 0 2 * * *" # Cleanup every day at 2 AM
     retention-days: 7 # Retain outbox messages for 7 days
     batch-size: 100 # Number of messages to delete in one batch
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+
+  metrics:
+    tags:
+      application: producer

@@ -32,7 +32,7 @@ public class OutboxPublisher {
         List<OutboxEvent> events = outboxRepository.findByPublishedFalse();
 
         if (events.isEmpty()) {
-            log.debug("No unpublished events found");
+//            log.debug("No unpublished events found");
             return;
         }
 
