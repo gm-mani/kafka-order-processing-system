@@ -1,10 +1,15 @@
 package com.mani.producer.model;
 
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -12,7 +17,13 @@ import lombok.Setter;
 @NoArgsConstructor
 public class OrderRequest {
 
+    @NotBlank(message = "orderId should not be null")
     private String orderId;
+
+    @NotBlank(message = "product name should not be null")
     private String productName;
-    private String price;
+
+    @NotNull(message = "price should not be null")
+    @Positive(message = "Negative values are not allowed for price")
+    private BigDecimal price;
 }

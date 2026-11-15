@@ -5,6 +5,10 @@ spring:
     url: jdbc:postgresql://localhost:5432/kafka_demo
     username: postgres
     password: postgres
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
   jpa:
     hibernate:
@@ -24,16 +28,6 @@ logging:
   level:
     root: INFO
     com.mani.producer: DEBUG
-
-#  cloud:
-#    stream:
-#      kafka:
-#        binder:
-#          brokers: localhost:9092
-#      bindings:
-#        sendOrder-out-0:
-#          destination: stream-order-topic
-#          content-type: application/json
 
 outbox:
   cleanup:

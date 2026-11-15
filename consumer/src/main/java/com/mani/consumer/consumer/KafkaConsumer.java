@@ -1,6 +1,5 @@
 package com.mani.consumer.consumer;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mani.consumer.repository.ProcessedOrderRepository;
 import com.mani.kafka.avro.OrderCreatedEvent;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +33,7 @@ public class KafkaConsumer {
                         @Header(KafkaHeaders.RECEIVED_PARTITION) int partition,
                         @Header(KafkaHeaders.OFFSET) long offset) {
 
-        if (order.getOrderId().equals("poison")) {
+        if ("poison".contentEquals(order.getOrderId())) {
             throw new RuntimeException("cannot process this order: " + order.getOrderId());
         }
 
@@ -42,7 +41,7 @@ public class KafkaConsumer {
             log.info("Instance received order [{}] from partition [{}] offset [{}]",
                     order.getOrderId(), partition, offset);
 
-            repository.insertOrder(order.getOrderId().toString());
+            repository.insertOrder(order.getEventId().toString(), order.getOrderId().toString());
             log.info("Order is marked processed: {}", order.getOrderId());
 
             acknowledgment.acknowledge();

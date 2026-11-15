@@ -8,10 +8,10 @@ import com.mani.producer.model.OrderCreatedPayload;
 import com.mani.producer.model.OrderRequest;
 import com.mani.producer.repository.OrderRepository;
 import com.mani.producer.repository.OutboxRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -31,16 +31,17 @@ public class OrderService {
         Order order = new Order();
         order.setOrderId(request.getOrderId());
         order.setProductName(request.getProductName());
-        order.setPrice(request.getPrice());
+        order.setPrice(request.getPrice().toPlainString());
 
         orderRepository.save(order);
         log.debug("Order saved to database with ID: {}", order.getOrderId());
 
+        String eventId = UUID.randomUUID().toString();
         OrderCreatedPayload orderCreatedPayload = OrderCreatedPayload.builder()
-                .eventId(UUID.randomUUID().toString())
+                .eventId(eventId)
                 .orderId(order.getOrderId())
                 .productName(request.getProductName())
-                .price(request.getPrice())
+                .price(request.getPrice().toPlainString())
                 .build();
 
         String orderPayload;
@@ -49,11 +50,11 @@ public class OrderService {
             orderPayload = objectMapper.writeValueAsString(orderCreatedPayload);
         } catch (JsonProcessingException e) {
             log.error("Error serializing OrderCreatedEvent: {}", e.getMessage());
-            return;
+            throw new IllegalStateException("Could not serialize order event for " + order.getOrderId(), e);
         }
 
         OutboxEvent event = new OutboxEvent();
-        event.setEventId(UUID.randomUUID().toString());
+        event.setEventId(eventId);
         event.setAggregateId(order.getOrderId());
         event.setEventType("ORDER_CREATED");
         event.setPayload(orderPayload);

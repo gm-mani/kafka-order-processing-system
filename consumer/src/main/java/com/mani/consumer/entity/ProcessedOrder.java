@@ -14,6 +14,9 @@ import java.time.LocalDateTime;
 public class ProcessedOrder {
 
     @Id
+    @Column(name = "event_id")
+    private String eventId;
+
     @Column(name = "order_id")
     private String orderId;
 
@@ -23,8 +26,9 @@ public class ProcessedOrder {
     protected ProcessedOrder() {
     }
 
-    public ProcessedOrder(String orderId,
+    public ProcessedOrder(String eventId, String orderId,
                           LocalDateTime processedAt) {
+        this.eventId = eventId;
         this.orderId = orderId;
         this.processedAt = processedAt;
     }

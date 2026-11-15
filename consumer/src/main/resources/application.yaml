@@ -39,18 +39,6 @@ logging:
     root: INFO
     com.mani.consumer: DEBUG
 
-#  cloud:
-#    function:
-#      definition: receiveOrder
-#    stream:
-#      bindings:
-#        receiveOrder-in-0:
-#          destination: stream-order-topic
-#          group: order-group
-#      kafka:
-#        binder:
-#          brokers: localhost:9092
-
 management:
   endpoints:
     web:

@@ -1,16 +1,17 @@
 package com.mani.producer.controller;
 
 
-import com.mani.producer.service.OrderService;
 import com.mani.producer.model.OrderRequest;
+import com.mani.producer.service.OrderService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping("/api")
 @Slf4j
 public class KafkaProducer {
@@ -23,7 +24,7 @@ public class KafkaProducer {
 
     @PostMapping("/createOrder")
     public ResponseEntity<String> createOrder(
-            @RequestBody OrderRequest request
+            @Valid @RequestBody OrderRequest request
     ) {
         log.info("Received order creation request for product: {}", request.getProductName());
         orderService.createOrder(request);
