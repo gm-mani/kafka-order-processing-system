@@ -9,7 +9,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "processed_orders")
+@Table(name = "processed_events")
 @Getter
 public class ProcessedOrder {
 

@@ -11,7 +11,7 @@ public interface ProcessedOrderRepository extends JpaRepository<ProcessedOrder, 
     @Transactional
     @Query(
             value = """
-                    INSERT INTO processed_orders(event_id, order_id, processed_at)
+                    INSERT INTO processed_events(event_id, order_id, processed_at)
                     VALUES (:eventId, :orderId, CURRENT_TIMESTAMP)
                     """,
             nativeQuery = true

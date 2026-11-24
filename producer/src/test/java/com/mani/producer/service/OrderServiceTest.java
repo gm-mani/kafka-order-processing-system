@@ -47,6 +47,9 @@ public class OrderServiceTest {
         OutboxEvent savedOutbox = outboxCaptor.getValue();
 
         assertThat(savedOrder.getOrderId()).isEqualTo("o-1");
+        assertThat(savedOrder.getPrice()).isEqualByComparingTo("999.99");
+        assertThat(savedOrder.getStatus()).isEqualTo("CREATED");
+
         assertThat(savedOutbox.getAggregateId()).isEqualTo("o-1");
         assertThat(savedOutbox.getEventType()).isEqualTo("ORDER_CREATED");
         assertThat(savedOutbox.getPublished()).isFalse();

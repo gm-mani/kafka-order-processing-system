@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -28,10 +29,14 @@ public class OrderService {
     @Transactional
     public void createOrder(OrderRequest request) {
 
+        BigDecimal price = request.getPrice().setScale(2);
+
         Order order = new Order();
         order.setOrderId(request.getOrderId());
         order.setProductName(request.getProductName());
-        order.setPrice(request.getPrice().toPlainString());
+        order.setPrice(price);
+        order.setStatus("CREATED");
+        order.setCreatedAt(LocalDateTime.now());
 
         orderRepository.save(order);
         log.debug("Order saved to database with ID: {}", order.getOrderId());
@@ -41,7 +46,7 @@ public class OrderService {
                 .eventId(eventId)
                 .orderId(order.getOrderId())
                 .productName(request.getProductName())
-                .price(request.getPrice().toPlainString())
+                .price(price.toPlainString())
                 .build();
 
         String orderPayload;
