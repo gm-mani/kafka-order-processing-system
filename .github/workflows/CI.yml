@@ -12,13 +12,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        module: [ producer, consumer ]
-
+        include:
+          - module: producer
+            db: orders_db
+          - module: consumer
+            db: processing_db
+    env:
+      DB_URL: jdbc:postgresql://localhost:5432/${{ matrix.db }}
+      
     services:
       postgres:
         image: postgres:17
         env:
-          POSTGRES_DB: kafka_demo
+          POSTGRES_DB: ${{ matrix.db }}
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         ports:
