@@ -38,8 +38,8 @@ public class KafkaConsumer {
         }
 
         try {
-            log.info("Instance received order [{}] from partition [{}] offset [{}]",
-                    order.getOrderId(), partition, offset);
+            log.info("Instance received order [{}] currency [{}] from partition [{}] offset [{}]",
+                    order.getOrderId(), order.getCurrency(), partition, offset);
 
             repository.insertOrder(order.getEventId().toString(), order.getOrderId().toString());
             log.info("Order is marked processed: {}", order.getOrderId());

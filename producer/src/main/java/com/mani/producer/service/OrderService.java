@@ -26,6 +26,8 @@ public class OrderService {
     private final OutboxRepository outboxRepository;
     private final ObjectMapper objectMapper;
 
+    private static final String DEFAULT_CURRENCY = "INR";
+
     @Transactional
     public void createOrder(OrderRequest request) {
 
@@ -47,6 +49,7 @@ public class OrderService {
                 .orderId(order.getOrderId())
                 .productName(request.getProductName())
                 .price(price.toPlainString())
+                .currency(DEFAULT_CURRENCY)
                 .build();
 
         String orderPayload;

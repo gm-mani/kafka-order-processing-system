@@ -7,6 +7,7 @@ public record OrderCreatedPayload(
         String eventId,
         String orderId,
         String productName,
-        String price
+        String price,
+        String currency
 ) {
 }

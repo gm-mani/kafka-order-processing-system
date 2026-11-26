@@ -59,6 +59,7 @@ public class OrderServiceTest {
                 .get("eventId")
                 .asText();
         assertThat(eventIdInPayload).isEqualTo(savedOutbox.getEventId());
+        assertThat(objectMapper.readTree(savedOutbox.getPayload()).get("currency").asText()).isEqualTo("INR");
 
     }
 

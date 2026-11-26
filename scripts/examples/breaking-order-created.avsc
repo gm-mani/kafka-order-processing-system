@@ -6,6 +6,8 @@
     { "name": "eventId",     "type": "string" },
     { "name": "orderId",     "type": "string" },
     { "name": "productName", "type": "string" },
-    { "name": "price",       "type": "string" }
+    { "name": "price",       "type": "string" },
+    { "name": "currency",    "type": "string", "default": "INR" },
+    { "name": "customerId",  "type": "string" }
   ]
 }

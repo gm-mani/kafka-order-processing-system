@@ -49,6 +49,7 @@ public class OutboxPublisher {
                         .setOrderId(orderPayload.orderId())
                         .setProductName(orderPayload.productName())
                         .setPrice(orderPayload.price())
+                        .setCurrency(orderPayload.currency() != null ? orderPayload.currency() : "INR")
                         .build();
 
                 kafkaTemplate.send(
