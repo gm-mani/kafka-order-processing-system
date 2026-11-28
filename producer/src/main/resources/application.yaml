@@ -18,12 +18,23 @@ spring:
     open-in-view: false
 
   kafka:
+    topics:
+      orders:
+        partitions: 3
     producer:
       bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+      acks: all
+      compression-type: lz4
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
       properties:
         schema.registry.url: ${SCHEMA_REGISTRY_URL:http://localhost:8081}
+        enable.idempotence: true
+        max.in.flight.requests.per.connection: 5
+        linger.ms: 0
+        request.timeout.ms: 3000
+        delivery.timeout.ms: 10000
+        max.block.ms: 3000
 
 # Logging configuration: keep root at INFO but enable DEBUG for producer package
 logging:
@@ -32,6 +43,10 @@ logging:
     com.mani.producer: DEBUG
 
 outbox:
+  relay:
+    poll-interval-ms: 1000
+    batch-size: 20
+    max-retries: 5
   cleanup:
     cron: "0 0 2 * * *" # Cleanup every day at 2 AM
     retention-days: 7 # Retain outbox messages for 7 days

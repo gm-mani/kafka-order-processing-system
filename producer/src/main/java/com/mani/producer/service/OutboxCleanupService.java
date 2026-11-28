@@ -2,6 +2,7 @@ package com.mani.producer.service;
 
 
 import com.mani.producer.entity.OutboxEvent;
+import com.mani.producer.entity.OutboxStatus;
 import com.mani.producer.repository.OutboxRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -28,8 +29,8 @@ public class OutboxCleanupService {
         );
 
         List<OutboxEvent> events =
-                outboxRepository.findByPublishedTrueAndCreatedAtBeforeOrderByCreatedAtAsc(
-                        cutoff, pageable
+                outboxRepository.findByStatusAndCreatedAtBeforeOrderByCreatedAtAsc(
+                        OutboxStatus.PUBLISHED, cutoff, pageable
                 );
 
         if (!events.isEmpty()) {

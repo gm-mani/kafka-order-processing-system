@@ -52,7 +52,7 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ../monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     depends_on:
       - kafka-exporter
     extra_hosts:

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mani.producer.entity.Order;
 import com.mani.producer.entity.OutboxEvent;
+import com.mani.producer.entity.OutboxStatus;
 import com.mani.producer.model.OrderRequest;
 import com.mani.producer.repository.OrderRepository;
 import com.mani.producer.repository.OutboxRepository;
@@ -52,7 +53,7 @@ public class OrderServiceTest {
 
         assertThat(savedOutbox.getAggregateId()).isEqualTo("o-1");
         assertThat(savedOutbox.getEventType()).isEqualTo("ORDER_CREATED");
-        assertThat(savedOutbox.getPublished()).isFalse();
+        assertThat(savedOutbox.getStatus()).isEqualTo(OutboxStatus.PENDING);
 
         String eventIdInPayload = objectMapper
                 .readTree(savedOutbox.getPayload())

@@ -29,7 +29,15 @@ public class OutboxEvent {
     @Column(columnDefinition = "TEXT")
     private String payload;
 
-    private Boolean published;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 16)
+    private OutboxStatus status = OutboxStatus.PENDING;
+
+    @Column(nullable = false)
+    private int retryCount = 0;
+
+    @Column(columnDefinition = "TEXT")
+    private String lastError = "";
 
     private LocalDateTime createdAt;
 }

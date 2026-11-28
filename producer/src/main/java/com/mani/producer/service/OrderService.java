@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mani.producer.entity.Order;
 import com.mani.producer.entity.OutboxEvent;
+import com.mani.producer.entity.OutboxStatus;
 import com.mani.producer.model.OrderCreatedPayload;
 import com.mani.producer.model.OrderRequest;
 import com.mani.producer.repository.OrderRepository;
@@ -66,7 +67,7 @@ public class OrderService {
         event.setAggregateId(order.getOrderId());
         event.setEventType("ORDER_CREATED");
         event.setPayload(orderPayload);
-        event.setPublished(false);
+        event.setStatus(OutboxStatus.PENDING);
         event.setCreatedAt(LocalDateTime.now());
 
         outboxRepository.save(event);
